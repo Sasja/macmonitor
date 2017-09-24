@@ -8,7 +8,7 @@ from pydbus.generic import signal
 from gi.repository import GLib
 from time import time, strftime
 
-mactimeout = 30
+mactimeout = 120
 iptimeout = 120
 
 interfacename = "gent.hackerspace.pamela2"
