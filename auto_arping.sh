@@ -10,7 +10,7 @@ do
         echo "                          ${ip}"
         # "-f":   stop after 1st reply
         # "-w 1": wait at most 1 sec
-        arping -f -w 1 -I $interface $ip | grep "reply from" | ./feeder.py
+        arping -f -w 3 -I $interface $ip | grep "reply from" | ./feeder.py
     done
     sleep 5 
 done
