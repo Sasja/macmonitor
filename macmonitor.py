@@ -6,12 +6,15 @@
 from pydbus import SessionBus
 from pydbus.generic import signal
 from gi.repository import GLib
-from time import time
+from time import time, strftime
 
 mactimeout = 30
 iptimeout = 120
 
 interfacename = "gent.hackerspace.pamela2"
+
+def mylog(eventString):
+    print strftime('%X %x %Z') + ": " + eventString
 
 class MyInterface(object):
     """
@@ -39,7 +42,7 @@ class MyInterface(object):
         for v in values:
             if not v in self._macs.keys():
                 newMac = True
-                print "new " + v
+                mylog("new " + v)
             self._macs[v] = time() + mactimeout
         if newMac:
             self.PropertiesChanged(interfacename, {"Macs": self.Macs}, [])
@@ -52,7 +55,7 @@ class MyInterface(object):
     def IPs(self, values):
         for v in values:
             if not v in self._ips.keys():
-                print "new " + v
+                mylog("new " + v)
             self._ips[v] = time() + iptimeout
 
     def updateTimeouts(self):
@@ -62,13 +65,13 @@ class MyInterface(object):
             if now > self._macs[mac]:
                 del self._macs[mac]
                 change = True
-                print "deleting " + mac
+                mylog("deleting " + mac)
         if change:
             self.PropertiesChanged(interfacename, {"Macs": self.Macs}, [])
         for ip in self._ips.keys():
             if now > self._ips[ip]:
                 del self._ips[ip]
-                print "deleting " + ip
+                mylog("deleting " + ip)
 
     PropertiesChanged = signal()
 
